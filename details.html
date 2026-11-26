@@ -40,7 +40,6 @@
       text-align: center;
       padding: 16px 12px;
       border-bottom: 3px solid var(--orange-dark);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
 
     .header h1 {
@@ -57,7 +56,7 @@
       letter-spacing: 0.4px;
     }
 
-    /* Centered form container */
+    /* Centered responsive container */
 
     .main-content {
       flex: 1;
@@ -83,14 +82,14 @@
       color: var(--orange-dark);
       font-size: 19px;
       font-weight: 600;
-      margin: 0 0 10px;
+      margin: 0 0 12px;
     }
 
     .demo-note {
       text-align: center;
-      color: #666666;
       font-size: 12px;
-      line-height: 1.6;
+      line-height: 1.5;
+      color: #666666;
       margin: 0 0 24px;
     }
 
@@ -122,14 +121,15 @@
                   box-shadow 0.2s ease;
     }
 
+    input::placeholder {
+      color: #999999;
+      font-size: 14px;
+    }
+
     input:focus {
       outline: none;
       border-color: var(--orange);
       box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.12);
-    }
-
-    input[readonly] {
-      background: #fafafa;
     }
 
     /* Continue button */
@@ -171,7 +171,7 @@
       letter-spacing: 0.3px;
     }
 
-    /* Loading overlay */
+    /* Loading animation */
 
     .overlay {
       position: fixed;
@@ -215,13 +215,6 @@
       font-size: 14px;
       line-height: 1.5;
       margin-top: 15px;
-    }
-
-    .message.error {
-      color: #b91c1c;
-    }
-
-    .message.success {
       color: #15803d;
     }
 
@@ -264,9 +257,7 @@
         animation: none;
       }
 
-      input,
-      button,
-      .overlay {
+      input, button, .overlay {
         transition: none;
       }
     }
@@ -275,14 +266,10 @@
 
 <body>
 
-  <!-- Header -->
-
   <header class="header">
     <h1>DIGITAL BANKING DEMO</h1>
     <p>Believe with us.</p>
   </header>
-
-  <!-- Form container -->
 
   <main class="main-content">
 
@@ -291,7 +278,8 @@
       <h2 class="form-title">Information Form</h2>
 
       <p class="demo-note">
-        Unofficial demonstration using fictional test records.
+        Unofficial demonstration. Enter fictional test details.
+        Information is not transmitted or stored.
       </p>
 
       <form id="dataForm" autocomplete="off">
@@ -304,11 +292,10 @@
           <input
             type="tel"
             id="phoneNumber"
-            name="phoneNumber"
             inputmode="numeric"
             pattern="[0-9]+"
-            value="0000000000"
-            readonly
+            placeholder="Enter phone number"
+            title="Enter digits only"
             required
           >
         </div>
@@ -321,11 +308,10 @@
           <input
             type="text"
             id="accountNumber"
-            name="accountNumber"
             inputmode="numeric"
             pattern="[0-9]+"
-            value="0000000001"
-            readonly
+            placeholder="Enter account number"
+            title="Enter digits only"
             required
           >
         </div>
@@ -338,10 +324,11 @@
           <input
             type="text"
             id="nickname"
-            name="nickname"
             pattern="[A-Za-z0-9]+"
-            value="DemoUser01"
-            readonly
+            placeholder="Enter nickname"
+            title="Enter letters and numbers only"
+            autocapitalize="off"
+            spellcheck="false"
             required
           >
         </div>
@@ -354,16 +341,13 @@
           <input
             type="text"
             id="refNumber"
-            name="refNumber"
             inputmode="numeric"
             pattern="[0-9]+"
-            value="1234567890"
-            readonly
+            placeholder="Enter reference number"
+            title="Enter digits only"
             required
           >
         </div>
-
-        <!-- Continue button -->
 
         <button
           type="submit"
@@ -385,13 +369,9 @@
 
   </main>
 
-  <!-- Footer -->
-
   <footer>
     All rights reserved @2026
   </footer>
-
-  <!-- Loading animation -->
 
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="spinner"></div>
@@ -399,27 +379,17 @@
   </div>
 
   <script>
-    // Updated Web App URL
-
-    const scriptURL =
-      "https://script.google.com/macros/s/AKfycbyXBHSe_WUwxBlPTFehU11ggfj7Gsn8WwpqMXDysKJxcEHf1cUZH2vtEORMOcmVHdz4Lw/exec";
-
     const form = document.getElementById("dataForm");
     const submitBtn = document.getElementById("submitBtn");
     const overlay = document.getElementById("overlay");
     const message = document.getElementById("message");
 
-    const sample = Object.freeze({
-      phoneNumber: "0000000000",
-      accountNumber: "0000000001",
-      nickname: "DemoUser01",
-      refNumber: "1234567890"
-    });
+    // Validate the form locally.
 
     form.addEventListener("submit", async function(event) {
       event.preventDefault();
 
-      if (submitBtn.disabled) {
+      if (submitBtn.disabled || !form.reportValidity()) {
         return;
       }
 
@@ -430,53 +400,18 @@
       overlay.setAttribute("aria-hidden", "false");
 
       message.textContent = "";
-      message.className = "message";
 
-      const controller = new AbortController();
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
-      const timeout = setTimeout(function() {
-        controller.abort();
-      }, 20000);
+      form.reset();
 
-      try {
-        const response = await fetch(scriptURL, {
-          method: "POST",
-          body: new URLSearchParams(sample),
-          signal: controller.signal
-        });
+      overlay.classList.remove("active");
+      overlay.setAttribute("aria-hidden", "true");
 
-        const result = await response.text();
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Continue";
 
-        if (!response.ok || result.trim() !== "SUCCESS") {
-          throw new Error("Test submission unsuccessful.");
-        }
-
-        message.textContent = "Test submitted successfully.";
-        message.className = "message success";
-
-        await new Promise(function(resolve) {
-          setTimeout(resolve, 1500);
-        });
-
-        window.location.href = "thankyou.html";
-
-      } catch (error) {
-        console.error(error);
-
-        message.textContent =
-          "Unable to complete the test. Please try again.";
-
-        message.className = "message error";
-
-      } finally {
-        clearTimeout(timeout);
-
-        overlay.classList.remove("active");
-        overlay.setAttribute("aria-hidden", "true");
-
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Continue";
-      }
+      message.textContent = "Form validation successful.";
     });
   </script>
 
